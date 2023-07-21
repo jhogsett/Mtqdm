@@ -17,8 +17,8 @@ _From the "Absurdity Bars" example in `mtqdm_tester.py`_
 from mtqdm import Mtqdm
 
 with Mtqdm().open_bar(desc="Doing", total=100) as bar:
-    doing_things()
-    Mtqdm().update_bar(bar)
+    while doing_things():
+        Mtqdm().update_bar(bar)
 ```
 
 ## Other Features
