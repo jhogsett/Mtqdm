@@ -133,6 +133,17 @@ class MtqdmTester():
                 Mtqdm().update_bar(bar2)
             Mtqdm().update_bar(bar)
 
+    def bar_message2(self, delay):
+        with Mtqdm().open_bar(total=2, desc="FFmpeg") as bar:
+            for n in range(2):
+                with Mtqdm().open_bar(total=1, desc="More FFmpeg") as bar2:
+                    Mtqdm().message(bar, "Main Process - No ETA")
+                    time.sleep(delay)
+                    Mtqdm().message(bar2, "Sub Process - No ETA")
+                    time.sleep(delay)
+                    Mtqdm().update_bar(bar2)
+                Mtqdm().update_bar(bar)
+
     def auto_total_bar(self, delay):
         with Mtqdm().open_bar(total=10, desc="Process stop short", auto_total=True) as bar:
             Mtqdm().update_bar(bar)
@@ -235,7 +246,7 @@ class MtqdmTester():
                 "Random Bars" : lambda : self.variable_bars(9, 10, 0.00001)
             },
             {
-                "Bar Message Test" : lambda : self.bar_message(3)
+                "Bar Message Test" : lambda : self.bar_message2(2)
             },
             {
                 "Auto-Total On Close" : lambda : self.auto_total_bar(1.5)

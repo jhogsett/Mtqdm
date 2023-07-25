@@ -156,6 +156,7 @@ class Mtqdm():
         self.position = -1
         self.color = -1
         self.leave = -1
+        self.message_pos = -1
 
         # alternates are dimmer, use brighter ones at first (less surprising)
         self.alternation = True
@@ -215,6 +216,7 @@ class Mtqdm():
             if bar_message_pos >= 0:
                 bar.display("", bar_message_pos)
                 self.bar_message[position] = -1
+                self._leave_message_pos()
 
             # if auto totalling
             if self.bar_auto_total[position]:
@@ -244,12 +246,13 @@ class Mtqdm():
 
     def message(self, bar, message=""):
         position = self._find_bar_position(bar)
-        self.bar_message[position] = position + 1
+        message_pos = self._enter_message_pos()
+        self.bar_message[position] = message_pos
         if self.use_color:
             palette = self._get_palette(self.current_palette)
             color = palette[position]
             message = self._webcolor_text(message, color)
-        bar.display(message, position + 1)
+        bar.display(message, message_pos)
 
     def update_bar(self, bar, steps=1):
         """Update a bar's progress"""
@@ -311,6 +314,16 @@ class Mtqdm():
 
     def _leave_color(self):
         self.color -= 1
+
+    def _get_message_pos(self):
+        return self.position + self.message_pos + 1
+
+    def _enter_message_pos(self):
+        self.message_pos += 1
+        return self._get_message_pos()
+
+    def _leave_message_pos(self):
+        self.message_pos -= 1
 
     def _toggle_color_alternation(self):
         self.alternation = not self.alternation
